@@ -1,28 +1,34 @@
 // linux environment
 # include <fcntl.h>
 # include <unistd.h>
+# include <ctype.h>
+# include <sys/time.h>
+# include <string.h>
 
 // termios API
-# include <termio.h>
+# include <termios.h>
 
 // ERROR CODES
+# define PORT_INIT_ERROR 103 // Could not open port, Maybe nothing connected yet
 # define PORT_ATTR_GET_ERROR 101 // Something went wrong while getting port attributes
 # define PORT_ATTR_SET_ERROR 102 // Something went wrong while setting port attributes
-# define PORT_INIT_ERROR 103 // Could not open port, Maybe nothing connected yet
+# define UART_WRITE_ERROR 104 // write() returned 0
+# define SELECT_TIMEOUT_ERROR 105 // timeout while reading received data via select() 
 
-// uart port on Linux 
-# define UART_PORT_PATH "/dev/ttyUSB0"
+// // uart port on Linux 
+extern char *uart_interface;
 
 // port's termios attributes 
-struct termios tty_USB0;               
+extern struct termios termios_interface_tty;               
 
 // Port's global file descriptor 
-int g_fd;    
+extern int g_fd;    
 
 // helper functions
-static speed_t get_baudrate(int baud);
+speed_t get_baudrate(int baud);
 
 // uart
-static int initialize_uart_interface();
-static int set_uart_baud_rate(int baud_rate);
+int initialize_uart_interface(int baud, int databits, char parity, int stopbits);
+int transmit_message(char *message);
+char *receive_message();
 

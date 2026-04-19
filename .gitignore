@@ -1,2 +1,6 @@
 # c gcc output files
 *.o
+
+# vscode
+.vscode
+
