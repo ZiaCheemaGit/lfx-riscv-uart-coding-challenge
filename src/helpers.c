@@ -1,9 +1,12 @@
 # include <helpers.h>
 
-// Implementations
-char *uart_interface;
-struct termios termios_interface_tty;               
+// Global Variables
+char *uart_interface;             
 int g_fd;  
+
+// Internal Varibles available only
+// in this file
+struct termios termios_interface_tty;  // port's termios attributes 
 
 // select BUAD RATE corresponding to 
 // options in termios

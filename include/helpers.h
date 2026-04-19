@@ -16,10 +16,7 @@
 # define SELECT_TIMEOUT_ERROR 105 // timeout while reading received data via select() 
 
 // // uart port on Linux 
-extern char *uart_interface;
-
-// port's termios attributes 
-extern struct termios termios_interface_tty;               
+extern char *uart_interface;             
 
 // Port's global file descriptor 
 extern int g_fd;    
