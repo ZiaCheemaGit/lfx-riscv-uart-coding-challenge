@@ -3,6 +3,8 @@
 // Global Variables
 char *uart_interface;             
 int g_fd;  
+char buffer[256];
+int bytes;
 
 // Internal Varibles available only
 // in this file
@@ -35,6 +37,10 @@ int initialize_uart_interface(int baud, int databits, char parity, int stopbits)
     if(tcgetattr(g_fd, &termios_interface_tty)) {
         return PORT_ATTR_GET_ERROR;
     }
+
+    termios_interface_tty.c_iflag = 0;
+    termios_interface_tty.c_oflag = 0;
+    termios_interface_tty.c_lflag = 0;
 
     // set uart BAUD RATE 
     speed_t baud_rate = get_baudrate(baud);
@@ -109,7 +115,7 @@ int initialize_uart_interface(int baud, int databits, char parity, int stopbits)
 // write message data to 
 // selected tty* uart interface
 int transmit_message(char *message) {
-    if(write(g_fd, message, strlen(message))) {
+    if(write(g_fd, message, strlen(message)) > 0) {
         return 0;
     }
     return UART_WRITE_ERROR;
@@ -126,13 +132,18 @@ int receive_message_with_timeout(int timeout_sec) {
     timeout.tv_sec = timeout_sec;
     timeout.tv_usec = 0;
 
-    int ret = select(g_fd + 1, &readfds, NULL, NULL, &timeout);
-    if (ret == 0) { return SELECT_TIMEOUT_ERROR; }
+    int nfds = g_fd + 1;
+    int ret = select(nfds, &readfds, NULL, NULL, &timeout);
+    if (!FD_ISSET(g_fd, &readfds)) { return SELECT_ERROR; }
+    if (ret < 0) { return SELECT_ERROR; }
+    if (ret == 0) { return READ_TIMEOUT_ERROR; }
 
-    char buffer[256];
+    bytes = read(g_fd, buffer, sizeof(buffer));
+    if (bytes < 0) {
+        return READ_ERROR;
+    }
 
-    int bytes = read(g_fd, buffer, sizeof(buffer));
-
-    if (bytes > 0)
-        write(STDOUT_FILENO, buffer, bytes);
+    return 0;
 }
+
+

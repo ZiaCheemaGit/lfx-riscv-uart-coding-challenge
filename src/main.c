@@ -44,8 +44,16 @@ int main(int argc, char *argv[]) {
     printf("Test message transmitted successfully\n");
 
 
-    // 
-
+    // Timeout Read Mechanisim and then  
+    // print read data to terminal
+    int timeout_seconds = 5;
+    receive_message_with_timeout(timeout_seconds);
+    printf("Data Read: ");
+    for (int i = 0; i < bytes; i++) {
+        printf("%c", buffer[i]);
+    }
+    printf("\n");
+    
 
     // End the Interface Process
     error_code = close(g_fd);
