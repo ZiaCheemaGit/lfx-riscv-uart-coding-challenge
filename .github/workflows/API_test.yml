@@ -31,11 +31,11 @@ jobs:
     - name: Test invalid databits
       run: |
         set +e
-        socat -d -d pty,raw,echo=0 pty,raw,echo=0 &
-        sleep 1
+        socat -d -d pty,raw,echo=0 pty,raw,echo=0 > socat.log 2>&1 &
+        sleep 2
 
-        DEV=$(ls /dev/pts | tail -n 1)
-        ./uart.o /dev/pts/$DEV 115200 9 N 1
+        DEV=$(grep -m1 "PTY is" socat.log | awk '{print $NF}')
+        ./uart.o "$DEV" 115200 9 N 1
         test $? -eq 102
 
     - name: Test invalid parity
