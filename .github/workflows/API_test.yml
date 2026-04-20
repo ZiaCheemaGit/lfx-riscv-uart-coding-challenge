@@ -44,7 +44,7 @@ jobs:
         socat -d -d pty,raw,echo=0 pty,raw,echo=0 &
         sleep 1
 
-        DEV=$(ls /dev/pts | tail -n 1)
+        DEV=$(grep "PTY is" socat.log | awk '{print $NF}' | tail -n 1)
         ./uart.o /dev/pts/$DEV 115200 8 X 1
         test $? -eq 102
 
@@ -54,7 +54,7 @@ jobs:
         socat -d -d pty,raw,echo=0 pty,raw,echo=0 &
         sleep 1
 
-        DEV=$(ls /dev/pts | tail -n 1)
+        DEV=$(grep "PTY is" socat.log | awk '{print $NF}' | tail -n 1)
         ./uart.o /dev/pts/$DEV 115200 8 N 3
         test $? -eq 102
 
