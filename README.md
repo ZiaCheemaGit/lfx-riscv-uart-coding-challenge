@@ -1,4 +1,4 @@
-![CI](https://github.com/ZiaCheemaGit/lfx-riscv-uart-coding-challenge/actions/workflows/build-test.yml/badge.svg)
+![CI](https://github.com/ZiaCheemaGit/lfx-riscv-uart-coding-challenge/actions/workflows/API_test.yml/badge.svg)
 ![License](https://img.shields.io/github/license/ZiaCheemaGit/lfx-riscv-uart-coding-challenge?style=for-the-badge)
 
 # LFX-RISCV-uart-coding-challenge
