@@ -25,7 +25,7 @@ jobs:
     - name: Test invalid device path
       run: |
         set +e
-        ./uart_test /dev/invalidUART 115200 8 N 1
+        ./uart.o /dev/invalidUART 115200 8 N 1
         test $? -eq 103
 
     - name: Test invalid databits
@@ -35,7 +35,7 @@ jobs:
         sleep 1
 
         DEV=$(ls /dev/pts | tail -n 1)
-        ./uart_test /dev/pts/$DEV 115200 9 N 1
+        ./uart.o /dev/pts/$DEV 115200 9 N 1
         test $? -eq 102
 
     - name: Test invalid parity
@@ -45,7 +45,7 @@ jobs:
         sleep 1
 
         DEV=$(ls /dev/pts | tail -n 1)
-        ./uart_test /dev/pts/$DEV 115200 8 X 1
+        ./uart.o /dev/pts/$DEV 115200 8 X 1
         test $? -eq 102
 
     - name: Test invalid stopbits
@@ -55,7 +55,7 @@ jobs:
         sleep 1
 
         DEV=$(ls /dev/pts | tail -n 1)
-        ./uart_test /dev/pts/$DEV 115200 8 N 3
+        ./uart.o /dev/pts/$DEV 115200 8 N 3
         test $? -eq 102
 
     - name: Test transmit correctness
@@ -69,7 +69,7 @@ jobs:
         cat "$DEV2" > capture.txt &
         sleep 1
 
-        ./uart_test "$DEV1" 115200 8 N 1 || true
+        ./uart.o "$DEV1" 115200 8 N 1 || true
 
         sleep 1
 
@@ -85,7 +85,7 @@ jobs:
 
         (sleep 1; echo "ACK: UART test message" > "$DEV2") &
 
-        ./uart_test "$DEV1" 115200 8 N 1 > output.txt || true
+        ./uart.o "$DEV1" 115200 8 N 1 > output.txt || true
 
         grep "ACK:" output.txt
 
@@ -98,7 +98,7 @@ jobs:
 
         START=$(date +%s)
 
-        ./uart_test "$DEV" 115200 8 N 1 || true
+        ./uart.o "$DEV" 115200 8 N 1 || true
 
         END=$(date +%s)
 
@@ -114,7 +114,7 @@ jobs:
         sudo chmod 000 fake_uart
 
         set +e
-        ./uart_test fake_uart 115200 8 N 1
+        ./uart.o fake_uart 115200 8 N 1
         test $? -eq 103
 
     - name: exit
@@ -124,8 +124,7 @@ jobs:
 
         DEV=$(grep -m1 "PTY is" socat.log | awk '{print $NF}')
 
-        ./uart_test "$DEV" 115200 8 N 1 || true
+        ./uart.o "$DEV" 115200 8 N 1 || true
 
         echo "Program exited cleanly"
 
-        
