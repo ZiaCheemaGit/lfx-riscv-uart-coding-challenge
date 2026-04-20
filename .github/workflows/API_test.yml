@@ -19,8 +19,7 @@ jobs:
         sudo apt-get install -y socat build-essential
 
     - name: Build program
-      run: |
-        make
+      run: make
 
     - name: Test invalid device path
       run: |
@@ -41,21 +40,21 @@ jobs:
     - name: Test invalid parity
       run: |
         set +e
-        socat -d -d pty,raw,echo=0 pty,raw,echo=0 &
-        sleep 1
+        socat -d -d pty,raw,echo=0 pty,raw,echo=0 > socat.log 2>&1 &
+        sleep 2
 
-        DEV=$(grep "PTY is" socat.log | awk '{print $NF}' | tail -n 1)
-        ./uart.o /dev/pts/$DEV 115200 8 X 1
+        DEV=$(grep -m1 "PTY is" socat.log | awk '{print $NF}')
+        ./uart.o "$DEV" 115200 8 X 1
         test $? -eq 102
 
     - name: Test invalid stopbits
       run: |
         set +e
-        socat -d -d pty,raw,echo=0 pty,raw,echo=0 &
-        sleep 1
+        socat -d -d pty,raw,echo=0 pty,raw,echo=0 > socat.log 2>&1 &
+        sleep 2
 
-        DEV=$(grep "PTY is" socat.log | awk '{print $NF}' | tail -n 1)
-        ./uart.o /dev/pts/$DEV 115200 8 N 3
+        DEV=$(grep -m1 "PTY is" socat.log | awk '{print $NF}')
+        ./uart.o "$DEV" 115200 8 N 3
         test $? -eq 102
 
     - name: Test transmit correctness
@@ -110,11 +109,11 @@ jobs:
 
     - name: Test permission denied handling
       run: |
-        sudo touch fake_uart
-        sudo chmod 000 fake_uart
+        mkdir restricted_uart
+        chmod 000 restricted_uart
 
         set +e
-        ./uart.o fake_uart 115200 8 N 1
+        ./uart.o restricted_uart 115200 8 N 1
         test $? -eq 103
 
     - name: exit
@@ -128,3 +127,4 @@ jobs:
 
         echo "Program exited cleanly"
 
+        
