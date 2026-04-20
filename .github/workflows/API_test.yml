@@ -1,130 +1,38 @@
-name: UART API Validation
+name: CI
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 on:
   push:
-  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - "*.md"
 
-jobs:
-  uart-api-test:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - "*.md"
+
+jobs:  
+  test_pc_one:
+    name: CI | API test | socats 
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v4
 
-    - name: Checkout repo
-      uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt install -y  make python3 python3-pip
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y socat build-essential
+      - name: Install nox
+        run: pip install nox
 
-    - name: Build program
-      run: make
+      - name: socats testing
+        run: nox -s test_uart_api_socats
+  
 
-    - name: Test invalid device path
-      run: |
-        set +e
-        ./uart.o /dev/invalidUART 115200 8 N 1
-        test $? -eq 103
-
-    - name: Test invalid databits
-      run: |
-        set +e
-        socat -d -d pty,raw,echo=0 pty,raw,echo=0 > socat.log 2>&1 &
-        sleep 2
-
-        DEV=$(grep -m1 "PTY is" socat.log | awk '{print $NF}')
-        ./uart.o "$DEV" 115200 9 N 1
-        test $? -eq 102
-
-    - name: Test invalid parity
-      run: |
-        set +e
-        socat -d -d pty,raw,echo=0 pty,raw,echo=0 > socat.log 2>&1 &
-        sleep 2
-
-        DEV=$(grep -m1 "PTY is" socat.log | awk '{print $NF}')
-        ./uart.o "$DEV" 115200 8 X 1
-        test $? -eq 102
-
-    - name: Test invalid stopbits
-      run: |
-        set +e
-        socat -d -d pty,raw,echo=0 pty,raw,echo=0 > socat.log 2>&1 &
-        sleep 2
-
-        DEV=$(grep -m1 "PTY is" socat.log | awk '{print $NF}')
-        ./uart.o "$DEV" 115200 8 N 3
-        test $? -eq 102
-
-    - name: Test transmit correctness
-      run: |
-        socat -d -d pty,raw,echo=0 pty,raw,echo=0 > socat.log 2>&1 &
-        sleep 2
-
-        DEV1=$(grep -m1 "PTY is" socat.log | awk '{print $NF}')
-        DEV2=$(grep -m2 "PTY is" socat.log | tail -n1 | awk '{print $NF}')
-
-        cat "$DEV2" > capture.txt &
-        sleep 1
-
-        ./uart.o "$DEV1" 115200 8 N 1 || true
-
-        sleep 1
-
-        grep "UART test message" capture.txt
-
-    - name: Test receive correctness
-      run: |
-        socat -d -d pty,raw,echo=0 pty,raw,echo=0 > socat.log 2>&1 &
-        sleep 2
-
-        DEV1=$(grep -m1 "PTY is" socat.log | awk '{print $NF}')
-        DEV2=$(grep -m2 "PTY is" socat.log | tail -n1 | awk '{print $NF}')
-
-        (sleep 1; echo "ACK: UART test message" > "$DEV2") &
-
-        ./uart.o "$DEV1" 115200 8 N 1 > output.txt || true
-
-        grep "ACK:" output.txt
-
-    - name: Test timeout behaviour
-      run: |
-        socat -d -d pty,raw,echo=0 pty,raw,echo=0 > socat.log 2>&1 &
-        sleep 2
-
-        DEV=$(grep -m1 "PTY is" socat.log | awk '{print $NF}')
-
-        START=$(date +%s)
-
-        ./uart.o "$DEV" 115200 8 N 1 || true
-
-        END=$(date +%s)
-
-        DIFF=$((END - START))
-
-        echo "Elapsed: $DIFF seconds"
-
-        test "$DIFF" -ge 5
-
-    - name: Test permission denied handling
-      run: |
-        mkdir restricted_uart
-        chmod 000 restricted_uart
-
-        set +e
-        ./uart.o restricted_uart 115200 8 N 1
-        test $? -eq 103
-
-    - name: exit
-      run: |
-        socat -d -d pty,raw,echo=0 pty,raw,echo=0 > socat.log 2>&1 &
-        sleep 2
-
-        DEV=$(grep -m1 "PTY is" socat.log | awk '{print $NF}')
-
-        ./uart.o "$DEV" 115200 8 N 1 || true
-
-        echo "Program exited cleanly"
-
-        
