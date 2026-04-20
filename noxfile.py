@@ -4,3 +4,4 @@ import nox
 def test_uart_api_socats(session: nox.Session) -> None:
     pass
 
+
