@@ -33,6 +33,6 @@ jobs:
         run: pip install nox
 
       - name: socats testing
-        run: nox -s test_uart_api_socats
+        run: nox -s test_uart_api_socat
   
 
