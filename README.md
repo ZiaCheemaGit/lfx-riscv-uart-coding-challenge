@@ -10,5 +10,8 @@ This repo contains solution of coding challenge for lfx riscv mentorship summer 
 - [Termios API Docs](https://man7.org/linux/man-pages/man3/termios.3.html)
 
 # CI Testing
-CI tests are based on  the requirements document of Coding Challenge. Tested using [socat](https://man7.org/linux/man-pages/man1/socat.1.html) via [nox](https://nox.thea.codes/en/stable/).
+CI tests are based on  the requirements document of Coding Challenge. Tested using [socat](https://man7.org/linux/man-pages/man1/socat.1.html) via [nox](https://nox.thea.codes/en/stable/). Initially socat was used directly in github actions but it was less flexible, Thus nox was a better option for more flexibility and control.
+
+
+
 
