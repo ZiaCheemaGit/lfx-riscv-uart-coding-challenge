@@ -19,7 +19,7 @@ on:
 
 jobs:  
   test_pc_one:
-    name: CI | API test | socats 
+    name: CI | API test | socat 
     runs-on: ubuntu-latest
 
     steps:
@@ -32,7 +32,7 @@ jobs:
       - name: Install nox
         run: pip install nox
 
-      - name: socats testing
+      - name: socat testing
         run: nox -s test_uart_api_socat
   
 
