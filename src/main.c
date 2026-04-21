@@ -4,6 +4,8 @@
 // standard APIs
 # include <stdio.h>
 # include <stdlib.h>
+
+// Interrupt Signals(Ctrl+C && Ctrl+Z) API 
 # include <signal.h>
 
 // End the Interface Process 
@@ -28,7 +30,7 @@ void print_read_data(int timeout) {
     for (int i = 0; i < bytes; i++) {
         printf("%c", buffer[i]);
     }
-    printf("\n");
+    printf("\r\n");
 }
 
 int main(int argc, char *argv[]) {

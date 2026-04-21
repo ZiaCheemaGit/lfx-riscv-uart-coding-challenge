@@ -10,6 +10,8 @@ int bytes;
 // in this file
 struct termios termios_interface_tty;  // port's termios attributes 
 
+// API Internal Helpers
+
 // select BUAD RATE corresponding to 
 // options in termios
 // Default 115200 otherwise
@@ -24,8 +26,10 @@ speed_t get_baudrate(int baud) {
     }
 }
 
+// API Ipmlementation Functions
+
 // initialize UART Port with provided configurations
-// and get file descriptor for the initialized process
+// and return file descriptor for the initialized process
 int initialize_uart_interface(int baud, int databits, char parity, int stopbits) {
     // Initialize 
     g_fd = open(uart_interface, O_RDWR | O_NOCTTY | O_NONBLOCK);
@@ -121,7 +125,7 @@ int transmit_message(char *message) {
     return UART_WRITE_ERROR;
 }
 
-// Read data using time out
+// Read data using time out Mechanisim
 int receive_message_with_timeout(int timeout_sec) {
     fd_set readfds;
     struct timeval timeout;
