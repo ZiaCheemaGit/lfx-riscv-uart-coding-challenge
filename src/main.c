@@ -22,7 +22,7 @@ void handle_exit(int sig) {
 // Read by timeout Mechanisim and then  
 // print read data to terminal
 void print_read_data(int timeout) {
-    int timeout_seconds = atoi(timeout);
+    int timeout_seconds = timeout;
     receive_message_with_timeout(timeout_seconds);
     printf("Data Read: ");
     for (int i = 0; i < bytes; i++) {
@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
     int databits = atoi(argv[3]); // Number of databits in payload (E.g. 6, 7 - Min: 5 && Max: 8)
     char parity = argv[4][0]; // Parity Type(E.g. N, E, O) - No parity, Even parity, Odd parity
     int stopbits = atoi(argv[5]); // Number of Stop Bits 1 0r 2
-    int timeout = argv[6]; // Number of seconds to wait before printing received data
+    int timeout = atoi(argv[6]); // Number of seconds to wait before printing received data
 
 
     // Initialize & Configure UART Interface
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
     tcdrain(g_fd);
     printf("Test message transmitted successfully\n");
 
-    
+
     // Non-blocking read
     while(1) {
         print_read_data(timeout);
