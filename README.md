@@ -19,7 +19,7 @@ Tested using [socat](https://man7.org/linux/man-pages/man1/socat.1.html) via [no
 ---
 
 # Build and Run
-To build just execute command `make`. 
+To build just execute command `make` in the root directory. 
 ```bash
 make
 ```
@@ -29,7 +29,7 @@ It will output a program named `uart.o`, which can be ran as following
 ```
 All Arguments are mandatory and must be in similar order as shown above 
 ```text
-uart_interface: Uart Port path on Linux File System(E.g. /dev/ttyUSB0)\n
+uart_interface: Uart Port path on Linux File System(E.g. /dev/ttyUSB0)
 baudrate: UART Baud Rate for both TX and RX (9600, 115200, e.t.c.)
 databits: Number of databits in payload(5 - 8)
 parity: Parity Type(N, E, O) - No parity, Even parity, Odd parity
@@ -37,9 +37,9 @@ stopbits: Number of Stop Bits (1 - 2)
 timeout: Number of seconds to wait before printing received data
 ```
 
-# Example
+## Example
 ```bash
-./uart /dev/ttyUSB0 9600 8 N 1 5
+./uart.o /dev/ttyUSB0 9600 8 N 1 5
 ```
 
 # Documentation
