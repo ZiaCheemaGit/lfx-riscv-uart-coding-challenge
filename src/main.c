@@ -24,6 +24,7 @@ void handle_exit(int sig) {
 // Read by timeout Mechanisim and then  
 // print read data to terminal
 void print_read_data(int timeout) {
+    print("Press Ctrl+C or Ctrl+Z to Exit the program.");
     int timeout_seconds = timeout;
     receive_message_with_timeout(timeout_seconds);
     printf("Data Read: ");
@@ -33,6 +34,47 @@ void print_read_data(int timeout) {
     printf("\r\n");
 }
 
+// print Error string corresponding
+// to its code in API
+void print_error(int error_code) {
+    printf("\n");
+    switch (error_code) {
+        case PORT_INIT_ERROR:
+            printf("Could not open port, Invalid device path or Maybe nothing connected on port yet");
+            break;
+
+        case PORT_ATTR_SET_ERROR:
+            printf("Something went wrong while setting port attributes.");
+            break;
+        
+        case PORT_ATTR_GET_ERROR:
+            printf("Something went wrong while getting port attributes.");
+            break;
+
+        case UART_WRITE_ERROR:
+            printf("Something went wrong while writing to serial port. Function write() returned 0.");
+            break;
+        
+        case READ_TIMEOUT_ERROR:
+            printf("Timeout while reading received data i.e. No data available to read on serial Port");
+            break; 
+
+        case SELECT_ERROR:
+            printf("Error occcured while execution of function select()");
+            break;
+
+        case READ_ERROR:
+            printf("Error occcured while execution of function read()");
+            break;    
+
+        default:
+            printf("Error not defined in API"); 
+            break;
+    }
+    printf("\n");
+}  
+
+// API Example 
 int main(int argc, char *argv[]) {
 
     // Program Usage
@@ -64,6 +106,7 @@ int main(int argc, char *argv[]) {
     int error_code = initialize_uart_interface(baud, databits, parity, stopbits);
     if(error_code) {
         printf("Unable to Initialize: %s\nError: %i\n", uart_interface, error_code);
+        print_error(error_code);
         return error_code;
     }
 
@@ -73,13 +116,15 @@ int main(int argc, char *argv[]) {
     error_code = transmit_message(test_message);
     if (error_code) {
         close(g_fd);
+        print_error(error_code);
         return error_code;
     }
     tcdrain(g_fd);
     printf("Test message transmitted successfully\n");
 
 
-    // Non-blocking read
+    // Non-blocking continuous read
+    // until an interrupt
     while(1) {
         print_read_data(timeout);
     }    
