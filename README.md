@@ -14,7 +14,7 @@ This repo contains solution of coding challenge for lfx riscv mentorship summer 
 # Testing and CI
 Tested using [socat](https://man7.org/linux/man-pages/man1/socat.1.html) via [nox](https://nox.thea.codes/en/stable/). Tests are based on  the requirements document of Coding Challenge.If you want to understand how socat is used to test this API. Here is a small [demo video](https://youtu.be/ze-gIhe2PXI).
 [![Coding Challenge Demo Video](images/youtube/M1.png)](https://youtu.be/ze-gIhe2PXI)  
-Initially socat was used directly in github actions but it was less flexible, Thus nox was a better option for more flexibility and control.Nox executes and automates same thing shown in demo video but in CI tests i.e. Github actions. 
+Initially socat was used directly in github actions but it was less flexible, Thus nox was a better option for more flexibility and control.`Nox executes and automates same thing shown in demo video but in CI tests` i.e. Github actions. 
 
 ---
 
