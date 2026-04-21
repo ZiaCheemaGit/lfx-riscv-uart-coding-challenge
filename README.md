@@ -18,6 +18,30 @@ Tested using [socat](https://man7.org/linux/man-pages/man1/socat.1.html) via [no
 
 ---
 
+# Build and Run
+To build just execute command `make`. 
+```bash
+make
+```
+It will output a program named `uart.o`, which can be ran as following
+```bash
+./uart.o <uart_interface> <baudrate> <databits> <parity> <stopbits> <timeout>
+```
+All Arguments are mandatory and must be in similar order as shown above 
+```text
+uart_interface: Uart Port path on Linux File System(E.g. /dev/ttyUSB0)\n
+baudrate: UART Baud Rate for both TX and RX (9600, 115200, e.t.c.)
+databits: Number of databits in payload(5 - 8)
+parity: Parity Type(N, E, O) - No parity, Even parity, Odd parity
+stopbits: Number of Stop Bits (1 - 2)
+timeout: Number of seconds to wait before printing received data
+```
+
+# Example
+```bash
+./uart /dev/ttyUSB0 9600 8 N 1 5
+```
+
 # Documentation
 This API satisfies the feautere set described in the Coding Challenge docx file. The main() function is not part of actual API. It is a demo to showcase all the feautures. 
 
