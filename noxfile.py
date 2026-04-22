@@ -4,7 +4,7 @@ import time
 import re
 import threading
 
-
+# same test which is shown in ReadMe.md file is automated via nox
 @nox.session()
 def test_uart_api_socat(session):
 
