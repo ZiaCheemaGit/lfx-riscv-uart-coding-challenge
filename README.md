@@ -19,8 +19,10 @@ Tested using [socat](https://man7.org/linux/man-pages/man1/socat.1.html) via [no
 ---
 
 # Build and Run
-To build just execute command `make` in the root directory. 
+First clone the repository. Then to build just execute command `make` in the root directory. 
 ```bash
+git clone https://github.com/ZiaCheemaGit/lfx-riscv-uart-coding-challenge.git
+cd lfx-riscv-uart-coding-challenge
 make
 ```
 It will output a program named `uart.o`, which can be ran as following
