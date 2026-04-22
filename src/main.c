@@ -24,7 +24,6 @@ void handle_exit(int sig) {
 // Read by timeout Mechanisim and then  
 // print read data to terminal
 void print_read_data(int timeout) {
-    printf("Press Ctrl+C or Ctrl+Z to Exit the program.");
     int timeout_seconds = timeout;
     receive_message_with_timeout(timeout_seconds);
     printf("Data Read: ");
@@ -125,6 +124,7 @@ int main(int argc, char *argv[]) {
 
     // Non-blocking continuous read
     // until an interrupt
+    printf("Press Ctrl+C or Ctrl+Z to Stop reading data and Exit the program.\n");
     while(1) {
         print_read_data(timeout);
     }    
